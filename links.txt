@@ -1,0 +1,26 @@
+quantitative traders, what do u actually do?
+https://www.reddit.com/r/quant/comments/14b0bb2/quantitative_traders_what_do_u_actually_do/
+
+yfinance 1.3.0 documentation
+https://pypi.org/project/yfinance/
+
+How to Use yfinance API with Python Geeks for Geeks
+https://www.geeksforgeeks.org/python/how-to-use-yfinance-api-with-python/
+
+yfinance Update 2025: What You NEED to Know! youtube
+https://www.youtube.com/watch?v=037_883wHGo
+
+yfinance documentation
+https://ranaroussi.github.io/yfinance/
+
+trade patterns
+https://highstrike.com/day-trading-patterns/
+
+Yfinance saying "too many requests rate limited" reddit
+https://www.reddit.com/r/learnpython/comments/1kbtydc/yfinance_saying_too_many_requests_rate_limited/#:~:text=I%20have%20some%20code%20that,Still%20nothing.
+
+Whats the rate limit on yahoo finance (unofficial api or web scraping) reddit
+https://www.reddit.com/r/algotrading/comments/1mntfnv/whats_the_rate_limit_on_yahoo_finance_unofficial/
+
+The #1 Most Profitable RSI Strategy Used by Our Traders (Made Our Firm Millions) youtube
+https://www.youtube.com/watch?v=CdMJ-QZ3PSg
