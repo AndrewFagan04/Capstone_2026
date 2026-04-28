@@ -3,6 +3,13 @@ import yfinance as yf
 import pandas as pd
 import plotly.graph_objects as go
 from streamlit_autorefresh import st_autorefresh
+
+import sys
+import os
+
+# Adds the current directory to the path so it can find your modules
+sys.path.append(os.path.dirname(__file__))
+
 from CS_agents import get_model, fetch_data, update_portfolios, get_signals
 from RNN_train import load_lstm, train_lstm
 
