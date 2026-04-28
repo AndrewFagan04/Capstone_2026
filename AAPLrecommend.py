@@ -48,7 +48,7 @@ def monitor_with_predictions(ticker_symbol):
             
             print(f"[{timestamp}] Price: ${price:.2f} | Signal: {signal}")
             
-            # Wait for 15 minutes
+            # Wait for 1 minute
             time.sleep(60)
     except KeyboardInterrupt:
         print("\nStopped.")

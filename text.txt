@@ -1,0 +1,5 @@
+d1: yfinance_test.py AAPLcheck.py AAPLrecommend.py NVDAtracker.py StreamlitTest.py 
+
+d2: agents_recommend.py ERRORapp.py ERRORnewapp.py ERRORnewengine.py
+
+d3: market.py RNN_train_TEST.py RNN_train.py CS_app.py CS_agents.py

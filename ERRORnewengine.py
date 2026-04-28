@@ -29,6 +29,21 @@ def get_movingaverage_signals(df):
     df['50D_MA'] = df['Close'].rolling(window=50).mean()
     df['200D_MA'] = df['Close'].rolling(window=200).mean()
 
+#
+    # Create Signal column
+    df['Signal'] = 0
+
+    for i in range(1, len(df)):
+        # BUY signal (20 crosses above 50)
+        if df['20D_MA'].iloc[i] > df['50D_MA'].iloc[i] and \
+           df['20D_MA'].iloc[i-1] <= df['50D_MA'].iloc[i-1]:
+            df.at[df.index[i], 'Signal'] = 1
+
+        # SELL signal (20 crosses below 50)
+        elif df['20D_MA'].iloc[i] < df['50D_MA'].iloc[i] and \
+             df['20D_MA'].iloc[i-1] >= df['50D_MA'].iloc[i-1]:
+            df.at[df.index[i], 'Signal'] = -1
+#
     return df
 
 # 2. RSI Strategy (Functional Style)
@@ -136,10 +151,19 @@ def get_rnn_signals(df, model, lookback=50):
     return df
     
 
-def run_backtest(df, agent, initial_capital=100):
+def run_backtest(df, agent, initial_capital=250.00):
     capital = initial_capital
     shares = 0
     equity_curve = []
+    position_size = 0.25 # use 25% capital
+
+    if df.empty:
+        return {
+            "equity_curve": [],
+            "return": 0,
+            "sharpe": 0,
+            "drawdown": 0
+        }
 
     for i in range(len(df)):
         price = float(df['Close'].iloc[i])
@@ -150,7 +174,7 @@ def run_backtest(df, agent, initial_capital=100):
             signal = signal.item()
 
         if signal == 1 and capital > price:
-            shares = int(capital // price)
+            shares = int((capital * position_size) // price)
             capital -= shares * price
         elif signal == -1 and shares > 0:
             capital += shares * price
@@ -160,9 +184,11 @@ def run_backtest(df, agent, initial_capital=100):
         
     # metrics
     total_return = (equity_curve[-1] - initial_capital) / initial_capital * 100
-
-    returns = np.diff(equity_curve) / equity_curve[:-1]
-    sharpe = np.mean(returns) / (np.std(returns) + 1e-9) * np.sqrt(252)
+    if len(equity_curve) < 2:
+        sharpe = 0
+    else:
+        returns = np.diff(equity_curve) / equity_curve[:-1]
+        sharpe = np.mean(returns) / (np.std(returns) + 1e-9) * np.sqrt(252 * 26)
 
     peak = np.maximum.accumulate(equity_curve)
     drawdown = np.min((equity_curve - peak) / peak) * 100
@@ -175,3 +201,13 @@ def run_backtest(df, agent, initial_capital=100):
     }
 
 
+def all_agents(df, model):
+    MA_signals = get_movingaverage_signals(df)
+    RSI_signals = get_rsi_signals(df)
+    RNN_signals = get_rnn_signals(df, model)
+
+    MA_results = run_backtest(df, MA_signals)
+    RSI_results = run_backtest(df, RSI_signals)
+    RNN_results = run_backtest(df, RNN_signals)
+
+    return MA_results, RSI_results, RNN_results
