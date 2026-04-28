@@ -6,3 +6,4 @@ streamlit-autorefresh==1.0.1
 scikit-learn==1.7.0
 keras==3.14.0
 joblib==1.5.1
+tensorflow==2.21.0
