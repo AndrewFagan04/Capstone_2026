@@ -67,7 +67,7 @@ status = t.info.get('marketState')
 
 
 if not data.empty:
-    # ADD THIS: Flatten Multi-Index columns so the chart can find 'Open', 'Close', etc.
+    # Flatten Multi-Index columns so the chart can find 'Open', 'Close', etc.
     if isinstance(data.columns, pd.MultiIndex):
         data.columns = data.columns.get_level_values(0)
 
@@ -94,8 +94,8 @@ if not data.empty:
     fig_price.update_layout(height=400, template="plotly_dark", margin=dict(l=20, r=20, t=20, b=20), yaxis_title="Stock Value ($)")
     st.plotly_chart(fig_price, use_container_width=True)
 
-    # ADD THIS HERE:
-    with st.expander("Agent Internal Ledgers (Are they holding?)", expanded=True):
+    # Ledgers for each Agent
+    with st.expander("Agent Internal Ledgers", expanded=True):
         ledger_data = []
         for agent, assets in st.session_state.agent_assets.items():
             # Calculate current total value for the table
@@ -137,7 +137,7 @@ if not data.empty:
 
     st.subheader("Recent Trade Activity")
     if not st.session_state.trade_log.empty:
-        # Show the last 10 trades, most recent first
+        # Shows the last 10 trades, most recent first
         st.dataframe(st.session_state.trade_log.tail(10).sort_values(by='Timestamp', ascending=False), use_container_width=True)
     else:
         st.info("No trades executed yet.")
