@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd
 from RNN_train import load_lstm
 
-# --- ENGINE: DATA & SIGNALS ---
+# FETCHING THE DATA
 def fetch_data(symbol):
     df = yf.download(symbol, period="1d", interval="1m")
     return df
@@ -12,7 +12,7 @@ def fetch_data(symbol):
 def get_model():
     return load_lstm()
 
-# --- REPLACE YOUR OLD get_signals WITH THIS ---
+# GETTING SIGNALS FROM EACH AGENT
 def get_signals(df, model, scaler):
     df = df.copy()
 
@@ -42,7 +42,7 @@ def get_signals(df, model, scaler):
         # 1. Get last 60 closes
         recent_data = df[['Close']].tail(lookback)
 
-        # 2. Use TRAINED scaler (NOT fit_transform)
+        # 2. Use TRAINED scaler
         scaled_data = scaler.transform(recent_data)
 
         # 3. Shape for LSTM
@@ -64,7 +64,7 @@ def get_signals(df, model, scaler):
 
     return {'SMA': sma_sig, 'RSI': rsi_sig, 'RNN': rnn_sig}, rsi_val
 
-# --- ENGINE: PORTFOLIO TRACKING ---
+# PORTFOLIO TRACKING
 def update_portfolios(current_price, signals, timestamp, pos_size_pct):
     new_entry = {'Timestamp': timestamp}
     

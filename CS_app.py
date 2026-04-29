@@ -13,7 +13,7 @@ sys.path.append(os.path.dirname(__file__))
 from CS_agents import get_model, fetch_data, update_portfolios, get_signals
 from RNN_train import load_lstm, train_lstm
 
-# --- INITIALIZATION ---
+# INITIALIZATION
 st.set_page_config(page_title="Stock Market AI Agent Trackers", layout="wide")
 model, scaler = get_model()
 
@@ -34,7 +34,7 @@ if 'agent_assets' not in st.session_state:
     }
 
 
-# --- SIDEBAR CONTROLS ---
+# SIDEBAR CONTROLS
 st.sidebar.header("Live Trading Console")
 ticker = st.sidebar.text_input("Stock Ticker", value="AAPL")
 start_cap = st.sidebar.number_input("Agent's Starting Cash ($)", value=10000)
@@ -55,7 +55,7 @@ st.sidebar.header("Risk Management")
 pos_size_pct = st.sidebar.slider("Position Size (% of Cash)", 5, 100, 20) / 100
 
 
-# --- UI LAYOUT ---
+# UI LAYOUT
 st.title("Real-Time Agent Performance")
 
 data = fetch_data(ticker)
@@ -86,7 +86,7 @@ if not data.empty:
     # Run logic update
     update_portfolios(current_p, signals, last_ts, pos_size_pct)
     
-    # --- ROW 1: PRICE CHART ---
+    # ROW 1: PRICE CHART
     st.subheader(f"Live Market: {ticker}")
     fig_price = go.Figure()
     fig_price.add_trace(go.Candlestick(x=data.index, open=data['Open'], high=data['High'], 
@@ -108,7 +108,7 @@ if not data.empty:
             })
         st.table(ledger_data)
 
-    # --- ROW 2: AGENT PORTFOLIO CHART ---
+    # ROW 2: AGENT PORTFOLIO CHART
     st.subheader("Agent Performance Comparison (Portfolio Value)")
     hist = st.session_state.portfolio_history
     
@@ -123,7 +123,7 @@ if not data.empty:
     fig_port.update_layout(height=400, template="plotly_dark", yaxis_title="Portfolio Value ($)")
     st.plotly_chart(fig_port, use_container_width=True)
 
-    # --- ROW 3: LIVE SIGNALS ---
+    # ROW 3: LIVE SIGNALS
     cols = st.columns(4)
     for i, agent in enumerate(['SMA', 'RSI', 'RNN']):
         with cols[i]:
@@ -145,7 +145,7 @@ if not data.empty:
 else:
     st.error("Failed to retrieve market data. Please check the ticker symbol.")
 
-# --- NEW AUTO-REFRESH LOGIC ---
+# NEW AUTO-REFRESH LOGIC
 if auto_refresh:
     # interval is in milliseconds (60000ms = 1 minute)
     # The 'key' ensures Streamlit tracks this specific timer

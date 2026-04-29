@@ -76,11 +76,11 @@ def train_rnn(model, prices, lookback=29, epochs=10, lr=0.001):
 
     model.train()
 
-    # 🔍 Clean data (important for stock data)
+    # Clean data (important for stock data)
     prices = np.array(prices)
     prices = prices[~np.isnan(prices)]
 
-    # 🚨 Guard clause
+    # Guard clause
     if len(prices) <= lookback:
         raise ValueError(
             f"Not enough data for RNN. Got {len(prices)} points, need > {lookback}"
