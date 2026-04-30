@@ -61,6 +61,10 @@ st.title("Real-Time Agent Performance")
 data = fetch_data(ticker)
 
 calendar = get_market_calendar(ticker)
+if isinstance(calendar, bool):
+    market_open = calendar
+else:
+    market_open = calendar.is_open_now()
 
 
 
@@ -74,10 +78,12 @@ if not data.empty:
     except TypeError:
         data.index = data.index.tz_localize('UTC').tz_convert('America/New_York')
     
-    if calendar.is_open_now():
-        st.success(f"The {calendar} is currently OPEN.")
+    if market_open:
+        name = calendar.name if not isinstance(calendar, bool) else "Crypto Market"
+        st.success(f"The {name} is currently OPEN.")
     else:
-        st.error(f"The {calendar} is currently CLOSED.")
+        name = calendar.name if not isinstance(calendar, bool) else "Market"
+        st.error(f"The {name} is currently CLOSED.")
 
     current_p = data['Close'].iloc[-1].item()
     last_ts = data.index[-1]
