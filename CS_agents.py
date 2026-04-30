@@ -1,6 +1,8 @@
 import yfinance as yf
 import streamlit as st
 import pandas as pd
+import pandas_market_calendars as mcal
+from datetime import datetime
 from RNN_train import load_lstm
 
 # FETCHING THE DATA
@@ -11,6 +13,37 @@ def fetch_data(symbol):
 @st.cache_resource
 def get_model():
     return load_lstm()
+
+# Mapping Yahoo Exchange codes to mcal names
+EXCHANGE_MAP = {
+    "NMS": "NASDAQ", "NGM": "NASDAQ", "NCM": "NASDAQ",  # NASDAQ levels
+    "NYQ": "NYSE", "NYS": "NYSE", "ASE": "NYSE", "PCX": "NYSE", # NYSE/Amex/Arca
+    "LSE": "LSE",    # London
+    "TOR": "TSX", "VAN": "TSX", # Toronto / Venture
+    "TYO": "JPX",    # Tokyo
+    "HKG": "HKEX",   # Hong Kong
+    "ASX": "ASX",    # Australia
+    "FRA": "XETR",   # Frankfurt/Xetra
+    "MIL": "BorsaItaliana",
+}
+
+def get_market_calendar(symbol):
+
+    t = yf.Ticker(symbol)
+    exchange = t.fast_info.get("exchange")
+
+    if exchange == "CCC" or "USD" in symbol:
+        # It's Crypto, so it's always open
+        return True 
+
+    try:
+        # Look up the mcal name
+        mcal_name = EXCHANGE_MAP.get(exchange, "NYSE")
+        calender = mcal.get_calendar(mcal_name)
+        return calender.is_open_now()
+    except Exception:
+        return False
+
 
 # GETTING SIGNALS FROM EACH AGENT
 def get_signals(df, model, scaler):

@@ -10,7 +10,7 @@ import os
 # Adds the current directory to the path so it can find your modules
 sys.path.append(os.path.dirname(__file__))
 
-from CS_agents import get_model, fetch_data, update_portfolios, get_signals
+from CS_agents import get_model, fetch_data, get_market_calendar, update_portfolios, get_signals
 from RNN_train import load_lstm, train_lstm
 
 # INITIALIZATION
@@ -60,10 +60,8 @@ st.title("Real-Time Agent Performance")
 
 data = fetch_data(ticker)
 
-# Checks if market is closed/open
-t = yf.Ticker(ticker)
-status = t.info.get('marketState')
-# Common states: 'REGULAR', 'CLOSED', 'PRE', 'POST', 'PREPRE'
+calendar = get_market_calendar(ticker)
+
 
 
 if not data.empty:
@@ -76,7 +74,10 @@ if not data.empty:
     except TypeError:
         data.index = data.index.tz_localize('UTC').tz_convert('America/New_York')
     
-    st.subheader(f"The market is currently in {status} trading hours.")
+    if calendar.is_open_now():
+        st.success(f"The {calendar} is currently OPEN.")
+    else:
+        st.error(f"The {calendar} is currently CLOSED.")
 
     current_p = data['Close'].iloc[-1].item()
     last_ts = data.index[-1]
