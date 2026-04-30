@@ -157,3 +157,5 @@ if auto_refresh:
     # interval is in milliseconds (60000ms = 1 minute)
     # The 'key' ensures Streamlit tracks this specific timer
     st_autorefresh(interval=live_data*60000, key="trading_update_timer")
+else:
+    st.info("Live updates are paused. Refresh to see the latest data.")

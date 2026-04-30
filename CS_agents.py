@@ -6,7 +6,8 @@ from datetime import datetime
 from RNN_train import load_lstm
 
 # FETCHING THE DATA
-def fetch_data(symbol):
+@st.cache_data(ttl=60)
+def fetch_data(symbol, refresh_interval):
     df = yf.download(symbol, period="1d", interval="1m")
     return df
 
@@ -27,8 +28,8 @@ EXCHANGE_MAP = {
     "MIL": "BorsaItaliana",
 }
 
+@st.cache_data(ttl=86400)
 def get_market_calendar(symbol):
-
     t = yf.Ticker(symbol)
     exchange = t.fast_info.get("exchange")
 
