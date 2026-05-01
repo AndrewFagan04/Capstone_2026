@@ -56,7 +56,7 @@ pos_size_pct = st.sidebar.slider("Position Size (% of Cash)", 5, 100, 20) / 100
 
 
 # UI LAYOUT
-st.title("Real-Time Agent Performance")
+st.title("AI-Driven Stock Market Simulation and Trading App")
 
 data = fetch_data(ticker)
 

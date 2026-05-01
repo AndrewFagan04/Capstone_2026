@@ -28,7 +28,7 @@ EXCHANGE_MAP = {
     "MIL": "BorsaItaliana",
 }
 
-@st.cache_data(ttl=86400)
+@st.cache_data(ttl=60)
 def get_market_calendar(symbol):
     t = yf.Ticker(symbol)
     exchange = t.fast_info.get("exchange")
