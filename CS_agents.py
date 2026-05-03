@@ -7,7 +7,7 @@ from RNN_train import load_lstm
 
 # FETCHING THE DATA
 @st.cache_data(ttl=60)
-def fetch_data(symbol, refresh_interval):
+def fetch_data(symbol):
     df = yf.download(symbol, period="1d", interval="1m")
     return df
 
