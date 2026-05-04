@@ -60,18 +60,14 @@ st.title("AI-Driven Stock Market Simulation and Trading App")
 
 data = fetch_data(ticker)
 
-calendar = get_market_calendar(ticker)
-if isinstance(calendar, bool):
-    market_open = calendar
-else:
-    market_open = calendar.is_open_now()
-
+market_name, market_open = get_market_calendar(ticker)
 
 
 if not data.empty:
     # Flatten Multi-Index columns so the chart can find 'Open', 'Close', etc.
     if isinstance(data.columns, pd.MultiIndex):
         data.columns = data.columns.get_level_values(0)
+    current_ny_time = pd.Timestamp.now(tz='America/New_York').strftime('%I:%M %p')
 
     try:
         data.index = data.index.tz_convert('America/New_York')
@@ -79,11 +75,9 @@ if not data.empty:
         data.index = data.index.tz_localize('UTC').tz_convert('America/New_York')
     
     if market_open:
-        name = calendar.name if not isinstance(calendar, bool) else "Crypto Market"
-        st.success(f"The {name} is currently OPEN.")
+        st.success(f"The {market_name} is currently OPEN. (NY Time: {current_ny_time})")
     else:
-        name = calendar.name if not isinstance(calendar, bool) else "Market"
-        st.error(f"The {name} is currently CLOSED.")
+        st.error(f"The {market_name} is currently CLOSED. (NY Time: {current_ny_time})")
 
     current_p = data['Close'].iloc[-1].item()
     last_ts = data.index[-1]

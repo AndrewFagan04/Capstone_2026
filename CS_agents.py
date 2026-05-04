@@ -35,15 +35,24 @@ def get_market_calendar(symbol):
 
     if exchange == "CCC" or "USD" in symbol:
         # It's Crypto, so it's always open
-        return True 
+        return "Crypto Market", True 
 
     try:
         # Look up the mcal name
         mcal_name = EXCHANGE_MAP.get(exchange, "NYSE")
         calender = mcal.get_calendar(mcal_name)
-        return calender.is_open_now()
-    except Exception:
-        return False
+
+        now = pd.Timestamp.now(tz='UTC').date()
+        schedule = calender.schedule(start_date=now, end_date=now)
+
+        if schedule.empty:
+            return calender.name, False
+        
+        is_open = calender.is_open_now(schedule)
+        return calender.name, is_open
+    
+    except Exception as e:
+        return "Market", False
 
 
 # GETTING SIGNALS FROM EACH AGENT
